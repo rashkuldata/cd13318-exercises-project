@@ -37,10 +37,11 @@ class InferenceExplorer:
             model: The model to use for experiments
         """
         # TODO: Initialize the OpenAI client
-        self.client = None
+        self.client = OpenAI(api_key=api_key)
+    
 
         # TODO: Store the model name
-        self.model = None
+        self.model = model
 
     def generate_with_temperature(self, prompt: str, temperature: float) -> str:
         """
@@ -63,8 +64,14 @@ class InferenceExplorer:
         # Use client.chat.completions.create()
         # Set temperature parameter
         # Return the generated text
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=temperature,
+            max_tokens=100 
+        )
 
-        pass
+        return response.choices[0].message.content
 
     def compare_temperatures(self, prompt: str, temperatures: List[float]) -> Dict[float, str]:
         """
@@ -358,6 +365,10 @@ def main():
     # Uncomment these as you implement them:
 
     # experiment_1_temperature_effects()
+    
+    explorer = InferenceExplorer(api_key=os.getenv("OPENAI_API_KEY"))
+    response = explorer.generate_with_temperature("Write a creative story opener", 0.9)
+    print(response)
     # experiment_2_top_p_sampling()
     # experiment_3_length_control()
     # experiment_4_repetition_penalty()
