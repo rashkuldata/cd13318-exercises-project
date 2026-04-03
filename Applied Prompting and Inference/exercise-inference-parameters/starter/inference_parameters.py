@@ -87,8 +87,10 @@ class InferenceExplorer:
         # TODO: Generate responses for each temperature
         # Store results in a dictionary
         # Return the dictionary
-
         results = {}
+        for temp in temperatures:
+            results[temp]= self.generate_with_temperature(prompt, temp)
+        
         return results
 
     def generate_with_top_p(self, prompt: str, top_p: float, temperature: float = 1.0) -> str:
@@ -113,6 +115,8 @@ class InferenceExplorer:
         # TODO: Make an API call with top_p parameter
         # Set both temperature and top_p
         # Return the generated text
+        
+        
 
         pass
 
@@ -369,6 +373,8 @@ def main():
     explorer = InferenceExplorer(api_key=os.getenv("OPENAI_API_KEY"))
     response = explorer.generate_with_temperature("Write a creative story opener", 0.9)
     print(response)
+    
+    print(explorer.compare_temperatures("Write a creative story opener", [0.0, 0.5, 1.0, 1.5]))
     # experiment_2_top_p_sampling()
     # experiment_3_length_control()
     # experiment_4_repetition_penalty()
